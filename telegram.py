@@ -73,7 +73,7 @@ def format_notice(title, link):
 🔗 {link}
 
 ━━━━━━━━━━━━━━━
-🎓 KC Notifier v2
+📸 <a href="https://instagram.com/prodip_das_22/"><b>@prodip_das_22</b></a>
 """
 
 
