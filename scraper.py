@@ -1,6 +1,6 @@
 """
 scraper.py
-KC Notifier v2.1
+KC Notifier v2.2
 """
 
 from urllib.parse import urljoin
@@ -9,6 +9,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from config import (
+    BASE_URL,
     NOTICE_URL,
     HEADERS,
     REQUEST_TIMEOUT,
@@ -17,22 +18,16 @@ from config import (
 
 def fetch_notices():
     """
-    Scrape all notices.
+    Fetch all notices from Karimganj College notice board.
 
     Returns:
-        [
-            {
-                "date": "...",
-                "title": "...",
-                "link": "..."
-            }
-        ]
+        List[dict]
     """
 
     response = requests.get(
         NOTICE_URL,
         headers=HEADERS,
-        timeout=REQUEST_TIMEOUT,
+        timeout=REQUEST_TIMEOUT
     )
 
     response.raise_for_status()
@@ -59,10 +54,13 @@ def fetch_notices():
         if len(cols) < 3:
             continue
 
-        date = cols[0].get_text(" ", strip=True)
+        # Date
+        date = cols[0].get_text(strip=True)
 
-        title = cols[1].get_text(" ", strip=True)
+        # Title
+        title = " ".join(cols[1].stripped_strings)
 
+        # PDF Link
         link = ""
 
         anchor = cols[2].find("a", href=True)
@@ -72,24 +70,22 @@ def fetch_notices():
             href = anchor["href"].strip()
 
             link = urljoin(
-                NOTICE_URL,
+                BASE_URL + "/",
                 href
             )
 
-        if not title:
-            continue
-
-        notices.append({
-            "date": date,
-            "title": title,
-            "link": link
-        })
+        notices.append(
+            {
+                "date": date,
+                "title": title,
+                "link": link
+            }
+        )
 
     return notices
 
 
 def latest_notice():
-
     notices = fetch_notices()
 
     if not notices:
@@ -106,14 +102,12 @@ if __name__ == "__main__":
     print("KC NOTIFIER SCRAPER TEST")
     print("=" * 60)
 
-    print(f"Found {len(notices)} notices.\n")
+    print(f"\nFound {len(notices)} notices.\n")
 
     for i, notice in enumerate(notices, start=1):
 
         print(f"Notice {i}")
-
-        print("Date :", notice["date"])
-        print("Title:", notice["title"])
-        print("Link :", notice["link"])
-
+        print(f"Date : {notice['date']}")
+        print(f"Title: {notice['title']}")
+        print(f"Link : {notice['link']}")
         print("-" * 60)
