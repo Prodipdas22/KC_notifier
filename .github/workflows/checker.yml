@@ -1,5 +1,8 @@
 name: Karimganj College Notice Checker
 
+permissions:
+  contents: read
+  issues: write
 on:
   schedule:
     # Runs every 30 minutes
