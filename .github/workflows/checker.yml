@@ -26,6 +26,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Sync with remote
+        run: |
+           git pull --rebase origin main
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -40,19 +44,12 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
-        run: |
-          python check.py
+        run: python check.py
 
       - name: Commit State
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git fetch origin
-
-          git checkout main
-
-          git pull --rebase origin main
 
           git add last_notice.json
 
@@ -62,5 +59,4 @@ jobs:
           fi
 
           git commit -m "Update last notice"
-
           git push origin main
