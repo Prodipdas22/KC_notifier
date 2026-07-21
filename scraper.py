@@ -1,29 +1,38 @@
 """
 scraper.py
-KC Notifier v2.0
+KC Notifier v2.1
 """
+
+from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
-from config import NOTICE_URL, HEADERS, REQUEST_TIMEOUT
+
+from config import (
+    NOTICE_URL,
+    HEADERS,
+    REQUEST_TIMEOUT,
+)
 
 
 def fetch_notices():
     """
-    Returns a list of notices.
+    Scrape all notices.
 
-    Each notice is a dictionary:
-    {
-        "date": "...",
-        "title": "...",
-        "link": "..."
-    }
+    Returns:
+        [
+            {
+                "date": "...",
+                "title": "...",
+                "link": "..."
+            }
+        ]
     """
 
     response = requests.get(
         NOTICE_URL,
         headers=HEADERS,
-        timeout=REQUEST_TIMEOUT
+        timeout=REQUEST_TIMEOUT,
     )
 
     response.raise_for_status()
@@ -42,6 +51,7 @@ def fetch_notices():
 
     rows = table.find_all("tr")
 
+    # Skip header row
     for row in rows[1:]:
 
         cols = row.find_all("td")
@@ -49,24 +59,31 @@ def fetch_notices():
         if len(cols) < 3:
             continue
 
-        date = cols[0].get_text(strip=True)
+        date = cols[0].get_text(" ", strip=True)
 
         title = cols[1].get_text(" ", strip=True)
 
-        link_tag = cols[2].find("a")
-
         link = ""
 
-        if link_tag:
-            link = link_tag.get("href", "").strip()
+        anchor = cols[2].find("a", href=True)
 
-        notices.append(
-            {
-                "date": date,
-                "title": title,
-                "link": link
-            }
-        )
+        if anchor:
+
+            href = anchor["href"].strip()
+
+            link = urljoin(
+                NOTICE_URL,
+                href
+            )
+
+        if not title:
+            continue
+
+        notices.append({
+            "date": date,
+            "title": title,
+            "link": link
+        })
 
     return notices
 
@@ -83,13 +100,20 @@ def latest_notice():
 
 if __name__ == "__main__":
 
-    data = fetch_notices()
+    notices = fetch_notices()
 
-    print(f"Found {len(data)} notices\n")
+    print("=" * 60)
+    print("KC NOTIFIER SCRAPER TEST")
+    print("=" * 60)
 
-    for notice in data:
+    print(f"Found {len(notices)} notices.\n")
 
-        print("--------------------------")
+    for i, notice in enumerate(notices, start=1):
+
+        print(f"Notice {i}")
+
         print("Date :", notice["date"])
         print("Title:", notice["title"])
         print("Link :", notice["link"])
+
+        print("-" * 60)
