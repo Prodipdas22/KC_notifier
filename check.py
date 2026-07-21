@@ -29,8 +29,8 @@ def main():
     notices = fetch_notices()
 
     if not notices:
-        print("No notices found.")
-        return
+        print("Website unavailable or no notices found.")
+        exit(0)
 
     print(f"Found {len(notices)} notices.")
 
