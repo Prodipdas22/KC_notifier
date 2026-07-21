@@ -24,65 +24,69 @@ def fetch_notices():
         List[dict]
     """
 
-    response = requests.get(
-        NOTICE_URL,
-        headers=HEADERS,
-        timeout=REQUEST_TIMEOUT
-    )
+    try:
+        response = requests.get(
+           NOTICE_URL,
+           headers=HEADERS,
+           timeout=REQUEST_TIMEOUT
+       )
 
-    response.raise_for_status()
+       response.raise_for_status()
 
-    soup = BeautifulSoup(response.text, "lxml")
+       soup = BeautifulSoup(response.text, "lxml")
 
-    table = soup.find(
-        "table",
-        id="ctl00_ContentPlaceHolder1_GridView1"
-    )
+       table = soup.find(
+           "table",
+           id="ctl00_ContentPlaceHolder1_GridView1"
+       )
 
-    if table is None:
-        raise Exception("Notice table not found.")
+       if table is None:
+           raise Exception("Notice table not found.")
 
-    notices = []
+       notices = []
 
-    rows = table.find_all("tr")
+       rows = table.find_all("tr")
 
-    # Skip header row
-    for row in rows[1:]:
+       # Skip header row
+       for row in rows[1:]:
 
-        cols = row.find_all("td")
+           cols = row.find_all("td")
 
-        if len(cols) < 3:
-            continue
+           if len(cols) < 3:
+               continue
 
-        # Date
-        date = cols[0].get_text(strip=True)
+           # Date
+           date = cols[0].get_text(strip=True)
 
-        # Title
-        title = " ".join(cols[1].stripped_strings)
+           # Title
+           title = " ".join(cols[1].stripped_strings)
 
-        # PDF Link
-        link = ""
+           # PDF Link
+           link = ""
 
-        anchor = cols[2].find("a", href=True)
+           anchor = cols[2].find("a", href=True)
 
-        if anchor:
+           if anchor:
 
-            href = anchor["href"].strip()
+               href = anchor["href"].strip()
 
-            link = urljoin(
-                BASE_URL + "/",
-                href
-            )
+               link = urljoin(
+                   BASE_URL + "/",
+                   href
+               )
 
-        notices.append(
-            {
-                "date": date,
-                "title": title,
-                "link": link
-            }
-        )
+           notices.append(
+               {
+                   "date": date,
+                   "title": title,
+                   "link": link
+               }
+           )
 
-    return notices
+       return notices
+    except requests.exceptions.RequestException as e:
+        print(f"ERROR: {e}")
+        return []
 
 
 def latest_notice():
