@@ -25,30 +25,26 @@ def fetch_notices():
     """
 
     try:
-        response = requests.get(
-           NOTICE_URL,
-           headers=HEADERS,
-           timeout=REQUEST_TIMEOUT
-       )
+        response = requests.get(NOTICE_URL, headers=HEADERS, timeout=REQUEST_TIMEOUT)
 
-       response.raise_for_status()
+        response.raise_for_status()
 
-       soup = BeautifulSoup(response.text, "lxml")
+        soup = BeautifulSoup(response.text, "lxml")
 
-       table = soup.find(
+        table = soup.find(
            "table",
            id="ctl00_ContentPlaceHolder1_GridView1"
-       )
+        )
 
-       if table is None:
+        if table is None:
            raise Exception("Notice table not found.")
 
-       notices = []
+        notices = []
 
-       rows = table.find_all("tr")
+        rows = table.find_all("tr")
 
-       # Skip header row
-       for row in rows[1:]:
+        # Skip header row
+        for row in rows[1:]:
 
            cols = row.find_all("td")
 
@@ -83,7 +79,7 @@ def fetch_notices():
                }
            )
 
-       return notices
+        return notices
     except requests.exceptions.RequestException as e:
         print(f"ERROR: {e}")
         return []
