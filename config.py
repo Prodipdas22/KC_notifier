@@ -37,7 +37,7 @@ GITHUB_REPOSITORY = os.getenv("GITHUB_REPOSITORY", "").strip()
 # HTTP Configuration
 # ==============================
 
-REQUEST_TIMEOUT = 30
+REQUEST_TIMEOUT = 60
 
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
