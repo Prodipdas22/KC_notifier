@@ -111,15 +111,12 @@ def main():
         print("No new notice.")
         return
 
-    '''message = (
+    message = (
         "📢 <b>Karimganj College New Notice</b>\n\n"
         f"<b>{title}</b>\n\n"
         f"🔗 {link}"
     )
 
-    send_telegram(message)'''
-
-    message = "✅ Test message from GitHub Actions"
     send_telegram(message)
 
     save_last_notice(latest)
