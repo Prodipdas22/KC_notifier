@@ -23,6 +23,8 @@ jobs:
 
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -56,7 +58,7 @@ jobs:
 
           if git diff --cached --quiet; then
             echo "No changes."
-           exit 0
+            exit 0
           fi
 
           git commit -m "Update last notice"
