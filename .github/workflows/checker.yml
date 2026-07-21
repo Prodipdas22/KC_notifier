@@ -1,13 +1,16 @@
 name: KC Notifier
-concurrency:
-  group: kc-notifier
-  cancel-in-progress: false
+
 on:
   workflow_dispatch:
 
   schedule:
     - cron: "*/30 * * * *"
 
+concurrency:
+  group: kc-notifier
+  cancel-in-progress: false
+
+  
 permissions:
   contents: write
 
@@ -38,20 +41,24 @@ jobs:
         run: |
           python check.py
 
-      - name: Commit State
+      - - name: Commit State
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin
+
+          git checkout main
+
+          git pull --rebase origin main
 
           git add last_notice.json
 
           if git diff --cached --quiet; then
-            echo "No changes detected."
-            exit 0
+            echo "No changes."
+           exit 0
           fi
 
           git commit -m "Update last notice"
 
-          git pull --rebase origin main || true
-
-          git push origin HEAD:main
+          git push origin main
