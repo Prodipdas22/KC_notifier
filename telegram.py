@@ -7,6 +7,7 @@ Telegram notification module.
 import requests
 from config import BOT_TOKEN, CHAT_ID
 from scraper import get_notice_type
+import json
 
 API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
