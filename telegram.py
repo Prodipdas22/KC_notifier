@@ -85,12 +85,12 @@ def format_notice(title, date, link):
 """
 
 
-def send_notice(title, link):
+def send_notice(title, date, link):
     """
     Send a formatted notice.
     """
 
-    message = format_notice(title, link)
+    message = format_notice(title, date, link)
 
     return send_message(message)
 
