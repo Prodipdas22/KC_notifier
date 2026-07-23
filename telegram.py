@@ -12,7 +12,7 @@ import json
 API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 
-def send_message(text, disable_preview=True):
+def send_message(text, notice_url = None, disable_preview=True):
     """
     Send a Telegram message.
 
@@ -29,6 +29,18 @@ def send_message(text, disable_preview=True):
         "parse_mode": "HTML",
         "disable_web_page_preview": disable_preview
     }
+
+    if notice_url:
+    payload["reply_markup"] = json.dumps({
+        "inline_keyboard": [
+            [
+                {
+                    "text": "📄 Open Notice",
+                    "url": notice_url
+                }
+            ]
+        ]
+    })
 
     try:
         response = requests.post(
@@ -67,7 +79,7 @@ def format_notice(title, date, link):
     notice_type = get_notice_type(title)
 
     return f"""
-🔔 <b>NEW KARIMGANJ COLLEGE NOTICE</b>
+🔔 <b>KARIMGANJ COLLEGE NOTICE</b>
 
 {notice_type}
 
@@ -77,7 +89,6 @@ def format_notice(title, date, link):
 📅 <b>Published</b>
 {date}
 
-🔗 <a href="{link}">Open Notice</a>
 
 ━━━━━━━━━━━━━━━━━━
 
@@ -93,7 +104,7 @@ def send_notice(title, date, link):
 
     message = format_notice(title, date, link)
 
-    return send_message(message)
+    return send_message(message,notice_url=link)
 
 
 def send_test():
