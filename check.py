@@ -83,6 +83,7 @@ def main():
 
         send_notice(
             notice["title"],
+            notice["date"],
             notice["link"]
         )
 
