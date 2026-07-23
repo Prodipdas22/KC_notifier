@@ -6,6 +6,7 @@ Telegram notification module.
 
 import requests
 from config import BOT_TOKEN, CHAT_ID
+from scraper import get_notice_type
 
 API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
@@ -61,19 +62,26 @@ def send_message(text, disable_preview=True):
         return False
 
 
-def format_notice(title, link):
-    """
-    Format a notice for Telegram.
-    """
+def format_notice(title, date, link):
+    notice_type = get_notice_type(title)
 
-    return f"""📢 <b>Karimganj College Notice</b>
+    return f"""
+🔔 <b>NEW KARIMGANJ COLLEGE NOTICE</b>
 
-<b>{title}</b>
+{notice_type}
 
-🔗 {link}
+📄 <b>Title</b>
+{title}
 
-━━━━━━━━━━━━━━━
-📸 <a href="https://instagram.com/prodip_das_22/"><b>@prodip_das_22</b></a>
+📅 <b>Published</b>
+{date}
+
+🔗 <a href="{link}">Open Notice</a>
+
+━━━━━━━━━━━━━━━━━━
+
+🤖 <b>KC Notifier</b>
+📍 Karimganj College
 """
 
 
