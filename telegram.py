@@ -31,16 +31,16 @@ def send_message(text, notice_url = None, disable_preview=True):
     }
 
     if notice_url:
-    payload["reply_markup"] = json.dumps({
-        "inline_keyboard": [
-            [
-                {
-                    "text": "📄 Open Notice",
-                    "url": notice_url
-                }
+        payload["reply_markup"] = json.dumps({
+            "inline_keyboard": [
+                [
+                    {
+                        "text": "📄 Open Notice",
+                        "url": notice_url
+                    }
+                ]
             ]
-        ]
-    })
+        })
 
     try:
         response = requests.post(
