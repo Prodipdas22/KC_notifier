@@ -94,6 +94,48 @@ def latest_notice():
     return notices[0]
 
 
+
+def get_notice_type(title):
+    title = title.lower()
+
+    keywords = {
+        "📝 Examination": [
+            "exam", "examination", "routine", "schedule",
+            "semester", "internal", "test"
+        ],
+        "🎓 Admission": [
+            "admission", "apply", "application", "enrollment",
+            "registration"
+        ],
+        "🏆 Result": [
+            "result", "merit", "selection", "qualified"
+        ],
+        "🎉 Holiday": [
+            "holiday", "vacation", "closed", "closure"
+        ],
+        "💼 Recruitment": [
+            "recruitment", "vacancy", "interview",
+            "appointment", "walk-in"
+        ],
+        "📄 Tender": [
+            "tender", "quotation", "bid", "eoi"
+        ],
+        "🎤 Event": [
+            "seminar", "workshop", "conference",
+            "event", "competition", "webinar", "cultural"
+        ],
+        "📚 Scholarship": [
+            "scholarship", "stipend", "financial assistance"
+        ],
+    }
+
+    for notice_type, words in keywords.items():
+        if any(word in title for word in words):
+            return notice_type
+
+    return "📢 General Notice"
+
+
 if __name__ == "__main__":
 
     notices = fetch_notices()
