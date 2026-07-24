@@ -81,16 +81,17 @@ def format_notice(title, date, link):
     return f"""
 🔔 <b>KARIMGANJ COLLEGE NOTICE</b>
 
-{notice_type}
+<b>{notice_type}</b>
 
-📄 <b>{title}</b>
+📄 <code>{title}</code>
 
-📅 <i>Published: {date}</i>
+📅 <code>Published: {date}</code>
+
 
 ━━━━━━━━━━━━━━━━━━
 
 🤖 <b>KC Notifier</b>
-📍 Karimganj College
+📍 <i>Karimganj College</i>
 """
 
 
