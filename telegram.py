@@ -83,12 +83,9 @@ def format_notice(title, date, link):
 
 {notice_type}
 
-📄 <b>Title</b>
-{title}
+📄 <b>{title}</b>
 
-📅 <b>Published</b>
-{date}
-
+📅 <i>Published: {date}</i>
 
 ━━━━━━━━━━━━━━━━━━
 
